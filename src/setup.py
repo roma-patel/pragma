@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import os, re, torch, shutil
+import sys
 import torch.nn as nn
 from cnns.resnet import resnet101
-#from models.inception import inception_v3
 import torch.utils.data
 import torch.utils.data.distributed
 import torchvision.datasets as datasets
@@ -126,8 +126,17 @@ def create_sw():
 
     fin_sw('test', test); fin_sw('dev', dev); fin_sw('train', train)
 
-def clean_abs():
+def clean_abs(dirpath):
+    f = open(dirpath + '/Sentences_1002.txt', 'r')
+    lines = f.readlines()
+
+    ''' setup in same format as mscoco, shapeworld to read feat '''
+    data = {}
+    for line in lines:
+        data[len(data.keys())] = line.strip()
+        
     return
 
 if __name__ == '__main__':
-    clean_abs()
+    dirpath = sys.argv[1]
+    clean_abs(dirpath)
