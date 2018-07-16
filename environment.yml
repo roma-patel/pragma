@@ -1,0 +1,15 @@
+name: jiant
+channels:
+    - pytorch
+dependencies:
+    - python=3.6
+    - pytorch=0.4.0
+    - torchvision=0.2.1
+    - numpy=1.14.5
+    - nltk=3.2.5
+    - scikit-learn=0.19.1
+    - pip:
+        - allennlp==0.5.1
+        - ipdb
+        - tensorboard
+        - tensorboardX==1.2
