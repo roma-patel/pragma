@@ -1,4 +1,7 @@
-''' For manipulating forward funtions '''
+''' For manipulating forward functions
+    For now: margin ranking, cosine embedding, contrastive,
+    literal pragmatic, rsa pragmatic
+'''
 
 import os
 import sys
