@@ -127,14 +127,45 @@ def create_sw():
     fin_sw('test', test); fin_sw('dev', dev); fin_sw('train', train)
 
 def clean_abs(dirpath):
+
+    simple, data = {}, {}
+    fnames = [name for name in os.listdir(dirpath + '/SimpleSentences/') if 'SimpleSent' in name]
+    for name in fnames:
+        f = open(dirpath + '/SimpleSentences/' + name, 'r')
+        lines = f.readlines()
+        for line in lines:
+            items = line.strip().split('\t')
+            idx, sent = items[0], items[-1]
+            if idx not in simple.keys(): simple[idx] = []
+            simple[idx].append(sent)
+
+    ''' setup in same format as mscoco, shapeworld to process features '''
+    fnames = [name for name in os.listdir(dirpath + '/RenderedScenes/') if '.png' in name]
     f = open(dirpath + '/Sentences_1002.txt', 'r')
     lines = f.readlines()
-
-    ''' setup in same format as mscoco, shapeworld to read feat '''
-    data = {}
     for line in lines:
-        data[len(data.keys())] = line.strip()
-        
+        idx = str(len(data.keys())); print(idx)
+        if idx in simple.keys(): s = simple[idx]
+        else: s = []
+        data[idx] = {'captions': {'seed': [line.strip()], 'simple': s}, 'images': []}
+        scenes = [name for name in fnames if name.split('_')[0].split('Scene')[-1] == idx]
+        data[idx]['images'] = scenes
+        print(scenes)
+
+    f = open(dirpath + '/all.json', 'w+')
+    f.write(json.dumps(data))
+
+    f = open(dirpath + 'all.json', 'r')
+    for line in f: data = json.loads(line)
+    
+    f = open(dirpath + '/all.tsv', 'w+')
+    for idx in data:
+        sents = data[idx]['captions']['simple']
+        for sent in sents:
+            f.write(sent + '\t' + str(idx) + '\t' + '1' + '\tsimple\n')
+        seed = data[idx]['captions']['seed'][0]
+        f.write(seed + '\t' + str(idx) + '\t' + '1' + '\tseed\n')
+    
     return
 
 if __name__ == '__main__':
